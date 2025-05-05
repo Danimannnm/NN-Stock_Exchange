@@ -4,51 +4,43 @@ from pathlib import Path
 from backtest_models import backtest_model
 import pickle
 
-
 def main():
-    # Directory containing train/val/test split CSVs
-    split_dir = Path("data/splits")
-    # Directory containing saved model files (.keras)
-    model_dir = Path("models")
-    # Directory containing saved scalers (pickled)
-    scaler_dir = Path("models/scalers")
-    # Where to write backtest results
+    split_dir  = Path("data/splits")
+    model_dir  = Path("models")
+    scaler_dir = model_dir / "scalers"
     results_dir = Path("data/backtest")
-    results_dir.mkdir(parents=True, exist_ok=True)
 
-    # Loop over every training split file
-    for train_path in split_dir.glob("*_train.csv"):  # e.g. AAPL_train.csv
-        # Derive base name (e.g. "AAPL")
-        base = train_path.stem.replace("_train", "")
-        # Construct validation and test paths
-        val_path = split_dir / f"{base}_val.csv"
-        test_path = split_dir / f"{base}_test.csv"
-
-        # Check that the split files exist
-        if not val_path.exists() or not test_path.exists():
-            print(f"Missing val or test split for {base}, skipping.")
+    # iterate over every .keras model file
+    for model_file in model_dir.glob("*.keras"):
+        # e.g. model_file.stem == "AAPL_cnn1d"
+        stem_parts = model_file.stem.split("_", 1)
+        if len(stem_parts) != 2:
+            print(f"Skipping unrecognized model file name: {model_file.name}")
             continue
 
-        symbol = base.split("_", 1)[0]
-        # Load the scaler for this symbol
-        scaler_path = scaler_dir / f"{symbol}_scaler.pkl"
-        if not scaler_path.exists():
-            print(f"Scaler not found for {base}, skipping.")
+        symbol, arch = stem_parts
+        test_csv = split_dir / f"{symbol}_test.csv"
+        scaler_pkl = scaler_dir / f"{symbol}_scaler.pkl"
+
+        if not test_csv.exists():
+            print(f"Missing test CSV for {symbol}, skipping.")
             continue
-        scaler = pickle.load(open(scaler_path, "rb"))
+        if not scaler_pkl.exists():
+            print(f"Missing scaler for {symbol}, skipping.")
+            continue
 
-        # Backtest each model for this symbol
-        # Model files should be named like AAPL_lstm.keras, AAPL_cnn1d.keras, etc.
-        for model_file in model_dir.glob(f"{base}_*.keras"):  # e.g. AAPL_lstm.keras
-            print(f"Backtesting model {model_file.name} on {base}")
-            mse, mae, da = backtest_model(
-                model_path=str(model_file),
-                scaler=scaler,
-                test_csv=str(test_path),
-                window_size=10,
-                results_dir=str(results_dir)
-            )
+        # load scaler
+        with open(scaler_pkl, "rb") as f:
+            scaler = pickle.load(f)
 
+        # backtest
+        backtest_model(
+            model_path  = str(model_file),
+            scaler      = scaler,
+            test_csv    = str(test_csv),
+            window_size = 10,
+            results_dir = str(results_dir)
+        )
 
 if __name__ == "__main__":
     main()
