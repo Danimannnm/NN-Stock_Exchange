@@ -6,6 +6,9 @@ import numpy as np
 from models_lstm import build_lstm
 from models_cnn import build_cnn1d
 from models_transformer import build_transformer
+import pickle
+    
+
 
 def load_data(path):
     df = pd.read_csv(path, parse_dates=['datetime'], index_col='datetime')
@@ -45,5 +48,15 @@ def train_and_save(model_fn, train_path, val_path, name, out_dir="models"):
         validation_data=(X_val, y_val),
         epochs=100, callbacks=[es, cp], batch_size=32, verbose=2
     )
+
+    
+    os.makedirs("models/scalers", exist_ok=True)
+    # save the scaler for later backtest
+    scaler_path = f"models/scalers/{name.split('_')[0]}_scaler.pkl"
+    with open(scaler_path, "wb") as f:
+        pickle.dump(scaler, f)
+    print(f"✓ scaler saved to {scaler_path}")
+
+
     # return history for later plotting/backtest
     return history, scaler
