@@ -1,5 +1,3 @@
-# src/dataset/split_dataset.py
-
 import os
 import pandas as pd
 from typing import Tuple
@@ -13,27 +11,34 @@ def split_time_series(
     """
     1. Load a numeric CSV with datetime index.
     2. Split into train/val/test by chronological fractions.
-    3. Save three CSVs to out_dir and return their paths.
+    3. Save three CSVs to out_dir named symbol_train.csv, symbol_val.csv, symbol_test.csv.
     """
     # Load data with datetime index
     df = pd.read_csv(
         in_path,
-        parse_dates=['datetime'],    # ensure datetime index :contentReference[oaicite:5]{index=5}
+        parse_dates=['datetime'],
         index_col='datetime',
         infer_datetime_format=True
     )
 
+    # Compute split indices
     n = len(df)
     train_end = int(n * train_frac)
     val_end   = train_end + int(n * val_frac)
 
-    train_df = df.iloc[:train_end]    # first 70% :contentReference[oaicite:6]{index=6}
-    val_df   = df.iloc[train_end:val_end]  # next 15% :contentReference[oaicite:7]{index=7}
-    test_df  = df.iloc[val_end:]      # final ~15% :contentReference[oaicite:8]{index=8}
+    # Slice data
+    train_df = df.iloc[:train_end]
+    val_df   = df.iloc[train_end:val_end]
+    test_df  = df.iloc[val_end:]
 
-    # Prepare output paths
-    symbol = os.path.basename(in_path).replace('.csv','')
+    # Derive symbol (prefix before any underscore or extension)
+    filename = os.path.basename(in_path)
+    symbol = filename.split('_')[0]
+
+    # Prepare output directory
     os.makedirs(out_dir, exist_ok=True)
+
+    # Define clean output names
     train_path = os.path.join(out_dir, f"{symbol}_train.csv")
     val_path   = os.path.join(out_dir, f"{symbol}_val.csv")
     test_path  = os.path.join(out_dir, f"{symbol}_test.csv")

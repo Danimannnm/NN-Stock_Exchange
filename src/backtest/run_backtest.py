@@ -29,8 +29,9 @@ def main():
             print(f"Missing val or test split for {base}, skipping.")
             continue
 
+        symbol = base.split("_", 1)[0]
         # Load the scaler for this symbol
-        scaler_path = scaler_dir / f"{base}_scaler.pkl"
+        scaler_path = scaler_dir / f"{symbol}_scaler.pkl"
         if not scaler_path.exists():
             print(f"Scaler not found for {base}, skipping.")
             continue
