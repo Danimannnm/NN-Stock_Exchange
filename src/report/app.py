@@ -45,14 +45,17 @@ if page == "Home":
         """
         Welcome! This dashboard helps us to understand how different AI models perform on stock‑price forecasting.
 
-        **What We Did:** We gathered daily stock data from Polygon.io, created helpful indicators (moving averages, RSI, Bollinger Bands),
+        **What We Used:** We gathered daily stock data from Polygon.io, created helpful indicators (moving averages, RSI, Bollinger Bands),
         and trained three neural networks (LSTM, 1D‑CNN, Transformer) to forecast next‑day closing prices.
+
+        **What We Did:** We used Python, TensorFlow, and Streamlit to build this project. The models were trained on historical data, and we backtested them on unseen data to evaluate their performance.
 
         **Explore:**
         - **Stock Analysis**: Pick a symbol, compare model predictions vs actuals.
         - **Error Analysis**: Inspect error distributions and rolling MAE.
         - **Returns Simulation**: See how a simple trading rule based on predictions would perform.
         - **Project Workflow**: Visualize the end‑to‑end development pipeline.
+        - **Glossary**: Definitions of key terms and concepts.
         """,
         unsafe_allow_html=True
     )
