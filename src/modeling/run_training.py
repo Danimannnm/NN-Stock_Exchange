@@ -1,8 +1,8 @@
 # src/modeling/run_training.py
 
 from pathlib import Path
-from train_models import train_and_save
-import models_lstm, models_cnn, models_transformer
+from src.modeling.train_models import train_and_save
+from src.modeling import models_lstm, models_cnn, models_transformer
 
 def main():
     split_dir = Path("data/splits")

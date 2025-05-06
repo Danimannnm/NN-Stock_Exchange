@@ -3,9 +3,9 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import numpy as np
-from models_lstm import build_lstm
-from models_cnn import build_cnn1d
-from models_transformer import build_transformer
+from src.modeling.models_lstm      import build_lstm
+from src.modeling.models_cnn       import build_cnn1d
+from src.modeling.models_transformer import build_transformer
 import pickle
     
 

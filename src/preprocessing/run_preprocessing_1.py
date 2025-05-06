@@ -1,7 +1,8 @@
 # src/preprocessing/run_preprocessing.py
 
 from pathlib import Path
-from clean_and_feature import clean_time_index
+from src.preprocessing.clean_and_feature import clean_time_index
+
 
 def main():
     raw_dir = Path("data/raw/bars")

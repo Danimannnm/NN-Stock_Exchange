@@ -1,7 +1,8 @@
 # src/dataset/run_split.py
 
 from pathlib import Path
-from split_dataset import split_time_series
+from src.dataset.split_dataset import split_time_series
+
 
 def main():
     numeric_dir = Path("data/processed/numeric_bars")

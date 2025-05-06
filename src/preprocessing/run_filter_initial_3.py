@@ -1,7 +1,8 @@
 # src/preprocessing/run_filter_initial.py
 
 from pathlib import Path
-from filter_initial import drop_initial_nan
+from src.preprocessing.filter_initial import drop_initial_nan
+
 
 def main():
     raw_cleaned = Path("data/features/bars")

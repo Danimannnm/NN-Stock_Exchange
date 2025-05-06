@@ -1,7 +1,8 @@
 #src/preprocessing/run_feature_engineering.py
 
 from pathlib import Path
-from remove_non_numeric import drop_non_numeric
+from src.preprocessing.remove_non_numeric import drop_non_numeric
+
 
 def main():
     raw_cleaned = Path("data/processed/filtered_bars")

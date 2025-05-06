@@ -1,7 +1,7 @@
 # src/backtest/run_backtest.py
 
 from pathlib import Path
-from backtest_models import backtest_model
+from src.backtest.backtest_models import backtest_model
 import pickle
 
 def main():

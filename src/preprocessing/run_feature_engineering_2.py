@@ -1,5 +1,7 @@
 from pathlib import Path
-from feature_engineering import add_technical_indicators
+# src/preprocessing/run_feature_engineering_2.py
+from src.preprocessing.feature_engineering import add_technical_indicators
+
 
 def main():
     raw_dir = Path("data/processed/bars")
