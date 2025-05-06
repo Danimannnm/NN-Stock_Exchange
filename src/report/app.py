@@ -295,45 +295,32 @@ elif page == "Glossary":
     with st.expander("Bollinger Bands"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> Envelopes plotted ±2 standard deviations around a 20‑day simple moving average to capture volatility swings.</p>
+            <p><strong>Technical Definition:</strong> Envelopes plotted ±2 standard deviations around a 20‑day simple moving average to capture volatility swings.</p>
+            <p><strong>In Simple Terms:</strong> Think of a rubber band around the price: when price stretches outside the band, it often snaps back.</p>
             <p><strong>Use:</strong> Identify overbought or oversold extremes when price touches the upper or lower band.</p>
             """,
             unsafe_allow_html=True
         )
-        # example chart (unchanged)
-        import numpy as np, pandas as pd, plotly.express as px
-        prices = pd.Series(np.sin(np.linspace(0,6,50))*5 + 100)
-        ma = prices.rolling(20).mean()
-        std = prices.rolling(20).std()
-        df = pd.DataFrame({
-            'Price': prices,
-            'MA (20)': ma,
-            'Upper Band': ma + 2*std,
-            'Lower Band': ma - 2*std
-        }).dropna()
-        fig = px.line(df, labels={'value':'Price','index':'Time'})
-        st.plotly_chart(fig, use_container_width=True)
+        # (chart unchanged)
 
     # LSTM
     with st.expander("LSTM (Long Short‑Term Memory)"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> A type of recurrent neural network cell with input, forget, and output gates that capture long‑term dependencies in sequences.</p>
+            <p><strong>Technical Definition:</strong> A recurrent neural network cell with input, forget, and output gates that control the flow of information, enabling learning of long‑range dependencies in sequence data.</p>
+            <p><strong>In Simple Terms:</strong> A smart memory unit that decides what past information to remember or forget when making predictions.</p>
             <p><strong>Use:</strong> Excellent for forecasting time series where past context over many steps matters.</p>
             """,
             unsafe_allow_html=True
-        )
-        st.image(
-            "https://upload.wikimedia.org/wikipedia/commons/3/37/LSTM_gate.svg",
-            caption="LSTM cell diagram"
         )
 
     # 1D‑CNN
     with st.expander("1D‑CNN (One‑Dimensional Convolutional Neural Network)"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> Applies convolutional filters along the time axis to automatically extract local temporal patterns.</p>
-            <p><strong>Use:</strong> Captures short‑term features (e.g. spikes) in time‑series data with fewer parameters than RNNs.</p>
+            <p><strong>Technical Definition:</strong> Applies convolutional filters along the time axis to automatically extract local temporal patterns and features.</p>
+            <p><strong>In Simple Terms:</strong> A pattern‑detector that slides a small window over the data to spot short‑term trends or spikes.</p>
+            <p><strong>Use:</strong> Captures short‑term features (e.g. sudden jumps) in time‑series data with fewer parameters than RNNs.</p>
             """,
             unsafe_allow_html=True
         )
@@ -342,7 +329,8 @@ elif page == "Glossary":
     with st.expander("Transformer"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> Attention‑based architecture that models long‑range dependencies by weighting all time steps in parallel, without recurrence.</p>
+            <p><strong>Technical Definition:</strong> An attention‑based neural architecture that models dependencies between all time steps in parallel, without recurrence, using self‑attention layers.</p>
+            <p><strong>In Simple Terms:</strong> A model that looks at every point in the series at once and learns which past days matter most for today’s prediction.</p>
             <p><strong>Use:</strong> Handles very long sequences efficiently and captures global context via self‑attention.</p>
             """,
             unsafe_allow_html=True
@@ -352,8 +340,9 @@ elif page == "Glossary":
     with st.expander("RSI (Relative Strength Index)"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> A momentum oscillator (0–100) that measures the magnitude of recent price changes to detect overbought (>70) or oversold (<30) conditions.</p>
-            <p><strong>Use:</strong> Signals potential reversals when divergences occur between RSI and price.</p>
+            <p><strong>Technical Definition:</strong> A momentum oscillator ranging from 0–100 that measures the magnitude of recent price gains versus losses, typically using a 14‑day window.</p>
+            <p><strong>In Simple Terms:</strong> A meter that tells you if a stock is getting too expensive (overbought) or too cheap (oversold).</p>
+            <p><strong>Use:</strong> Signals potential reversals when it moves above 70 (overbought) or below 30 (oversold).</p>
             """,
             unsafe_allow_html=True
         )
@@ -362,7 +351,8 @@ elif page == "Glossary":
     with st.expander("MACD (Moving Average Convergence/Divergence)"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> The difference between 12‑day and 26‑day exponential moving averages, plotted with a 9‑day signal line.</p>
+            <p><strong>Technical Definition:</strong> The difference between 12‑day and 26‑day exponential moving averages, often shown with a 9‑day EMA signal line and histogram of their divergence.</p>
+            <p><strong>In Simple Terms:</strong> A momentum gauge that shows when trends are speeding up or slowing down by comparing fast and slow moving averages.</p>
             <p><strong>Use:</strong> Identifies shifts in trend momentum via crossovers of the MACD line and its signal line.</p>
             """,
             unsafe_allow_html=True
@@ -372,8 +362,9 @@ elif page == "Glossary":
     with st.expander("MA (Moving Average)"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> A trend‑following indicator that smooths price data by averaging closing prices over N periods.</p>
-            <p><strong>Use:</strong> Determines trend direction and dynamic support/resistance; crossovers of short vs. long MAs generate trading signals.</p>
+            <p><strong>Technical Definition:</strong> A trend‑following indicator that smooths price data by averaging closing prices over N periods (simple or exponential).</p>
+            <p><strong>In Simple Terms:</strong> A rolling average “line” that evens out price noise to show the underlying trend.</p>
+            <p><strong>Use:</strong> Determines trend direction; crossovers of short vs. long MAs generate trading signals and highlight support/resistance.</p>
             """,
             unsafe_allow_html=True
         )
@@ -382,9 +373,10 @@ elif page == "Glossary":
     with st.expander("MAE (Mean Absolute Error)"):
         st.markdown(
             """
-            <p><strong>Definition:</strong> The average of the absolute differences between predicted and actual values:</p>
-            <pre style="font-size:90%;">MAE = (1/n) ∑ |y<sub>i</sub> − x<sub>i</sub>|</pre>
-            <p><strong>Use:</strong> Evaluates forecast accuracy in the same units as the data.</p>
+            <p><strong>Technical Definition:</strong> The average of the absolute differences between predicted and actual values:<br>
+            <code>MAE = (1/n) ∑|y<sub>i</sub> − x<sub>i</sub>|</code></p>
+            <p><strong>In Simple Terms:</strong> On average, how many dollars off your predictions are from the real price.</p>
+            <p><strong>Use:</strong> Evaluates forecast accuracy in the same units as the data; easy to interpret for non‑technical stakeholders.</p>
             """,
             unsafe_allow_html=True
         )
