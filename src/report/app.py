@@ -9,6 +9,8 @@ from streamlit_flow import streamlit_flow  # Interactive flowchart component :co
 from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
 from streamlit_flow.state import StreamlitFlowState
 import pickle
+import streamlit as st
+
 
 # ——————————————
 # Page config & constants
@@ -19,6 +21,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )  # must be first Streamlit call :contentReference[oaicite:3]{index=3}
 
+
+
 BACKTEST_DIR = Path("data/backtest")
 
 # ——————————————
@@ -26,7 +30,7 @@ BACKTEST_DIR = Path("data/backtest")
 # ——————————————
 page = st.sidebar.radio(
     "Navigate",
-    ("Home", "Stock Analysis", "Project Workflow"),
+    ("Home", "Stock Analysis", "Project Workflow","Glossary"),
     index=0
 )
 
@@ -34,6 +38,8 @@ page = st.sidebar.radio(
 # 1) HOME VIEW
 # ——————————————
 if page == "Home":
+    
+
     st.title("📈 Predicting and Forecasting Stock Prices")
     st.markdown(
         """
@@ -56,6 +62,8 @@ if page == "Home":
 # ——————————————
 elif page == "Stock Analysis":
     st.header("🔍 Stock Analysis")
+
+    
 
     # Select symbol & models
     preds = sorted(BACKTEST_DIR.glob("*_predictions.csv"))
@@ -112,7 +120,7 @@ elif page == "Stock Analysis":
         )
 
     # Tabs for charts
-    tabs = st.tabs(["💲 Price Chart","📊 Error Analysis","💹 Returns Simulation","📝 Addendum"])
+    tabs = st.tabs(["💲 Price Chart","📊 Error Analysis","💹 Returns Simulation"])
 
     # Price Chart
     with tabs[0]:
@@ -125,7 +133,7 @@ elif page == "Stock Analysis":
             color_discrete_sequence=px.colors.sequential.Viridis
         )
         st.plotly_chart(fig, use_container_width=True)
-        st.markdown("*Solid line = actual; dashed = predicted.*")
+        st.markdown("*Comparision of Models against actual market performance*")
 
     # Error Analysis
     with tabs[1]:
@@ -173,13 +181,7 @@ elif page == "Stock Analysis":
             "*Compounds $1 on days when the model predicts an up‑day. This correctly shows cumulative strategy growth.*"
         )
 
-    # Addendum
-    with tabs[3]:
-        st.subheader("Addendum: Rolling MAE Window Effect")
-        st.markdown(
-            "When computing a rolling metric over N days, the first N-1 days lack enough prior points, so the plot starts at day N."
-        )
-
+    
     # Download buttons
     st.markdown("---")
     st.download_button(
@@ -201,7 +203,7 @@ elif page == "Stock Analysis":
 elif page == "Project Workflow":
     # inside your `elif page == "Project Workflow":` block
 
-    st.header("🗂️ Project Workflow (Collapsible Tree)")
+    st.header("🗂️ Project Workflow")
 
     # Ingestion folder
     with st.expander("📥 Ingestion (src/ingestion)", expanded=False):
@@ -283,3 +285,107 @@ elif page == "Project Workflow":
             - **(optional)** any helper modules for custom charts or styling.
             """
         )
+
+# in src/report/app.py, replace your “Glossary” section with this:
+
+elif page == "Glossary":
+    st.header("📚 Glossary of Technical Terms")
+
+    # Bollinger Bands
+    with st.expander("Bollinger Bands"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> Envelopes plotted ±2 standard deviations around a 20‑day simple moving average to capture volatility swings.</p>
+            <p><strong>Use:</strong> Identify overbought or oversold extremes when price touches the upper or lower band.</p>
+            """,
+            unsafe_allow_html=True
+        )
+        # example chart (unchanged)
+        import numpy as np, pandas as pd, plotly.express as px
+        prices = pd.Series(np.sin(np.linspace(0,6,50))*5 + 100)
+        ma = prices.rolling(20).mean()
+        std = prices.rolling(20).std()
+        df = pd.DataFrame({
+            'Price': prices,
+            'MA (20)': ma,
+            'Upper Band': ma + 2*std,
+            'Lower Band': ma - 2*std
+        }).dropna()
+        fig = px.line(df, labels={'value':'Price','index':'Time'})
+        st.plotly_chart(fig, use_container_width=True)
+
+    # LSTM
+    with st.expander("LSTM (Long Short‑Term Memory)"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> A type of recurrent neural network cell with input, forget, and output gates that capture long‑term dependencies in sequences.</p>
+            <p><strong>Use:</strong> Excellent for forecasting time series where past context over many steps matters.</p>
+            """,
+            unsafe_allow_html=True
+        )
+        st.image(
+            "https://upload.wikimedia.org/wikipedia/commons/3/37/LSTM_gate.svg",
+            caption="LSTM cell diagram"
+        )
+
+    # 1D‑CNN
+    with st.expander("1D‑CNN (One‑Dimensional Convolutional Neural Network)"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> Applies convolutional filters along the time axis to automatically extract local temporal patterns.</p>
+            <p><strong>Use:</strong> Captures short‑term features (e.g. spikes) in time‑series data with fewer parameters than RNNs.</p>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # Transformer
+    with st.expander("Transformer"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> Attention‑based architecture that models long‑range dependencies by weighting all time steps in parallel, without recurrence.</p>
+            <p><strong>Use:</strong> Handles very long sequences efficiently and captures global context via self‑attention.</p>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # RSI
+    with st.expander("RSI (Relative Strength Index)"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> A momentum oscillator (0–100) that measures the magnitude of recent price changes to detect overbought (>70) or oversold (<30) conditions.</p>
+            <p><strong>Use:</strong> Signals potential reversals when divergences occur between RSI and price.</p>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # MACD
+    with st.expander("MACD (Moving Average Convergence/Divergence)"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> The difference between 12‑day and 26‑day exponential moving averages, plotted with a 9‑day signal line.</p>
+            <p><strong>Use:</strong> Identifies shifts in trend momentum via crossovers of the MACD line and its signal line.</p>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # Moving Average
+    with st.expander("MA (Moving Average)"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> A trend‑following indicator that smooths price data by averaging closing prices over N periods.</p>
+            <p><strong>Use:</strong> Determines trend direction and dynamic support/resistance; crossovers of short vs. long MAs generate trading signals.</p>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # MAE
+    with st.expander("MAE (Mean Absolute Error)"):
+        st.markdown(
+            """
+            <p><strong>Definition:</strong> The average of the absolute differences between predicted and actual values:</p>
+            <pre style="font-size:90%;">MAE = (1/n) ∑ |y<sub>i</sub> − x<sub>i</sub>|</pre>
+            <p><strong>Use:</strong> Evaluates forecast accuracy in the same units as the data.</p>
+            """,
+            unsafe_allow_html=True
+        )
+
